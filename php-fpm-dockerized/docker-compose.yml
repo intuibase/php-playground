@@ -1,0 +1,29 @@
+version: '3.0'
+
+services:
+  nginx:
+    image: nginx:latest
+    ports:
+      - "8181:8181"
+    volumes:
+      - ${PATH_TO_HTML:-./html}:/code:rw
+      - ./configuration/nginx.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - dockerphp
+
+  php-fpm81:
+    image: php:8.1-fpm
+    volumes:
+      - ${PATH_TO_HTML:-./html}:/code:rw
+      - ${PATH_TO_AGENT:-./agent/src}:/elasticapm
+      - ${PATH_TO_ELASTIC_INI_FILE:-./configuration/elastic.ini}:/usr/local/etc/php/conf.d/elastic.ini
+      - ${PATH_TO_PHP_INI_FILE:-./configuration/php81.ini}:/usr/local/etc/php/conf.d/php.ini
+      - /tmp:/tmp
+    privileged: true
+    networks:
+      - dockerphp
+
+
+networks:
+  dockerphp:
+    driver: bridge
