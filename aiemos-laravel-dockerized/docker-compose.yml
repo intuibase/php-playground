@@ -1,0 +1,35 @@
+version: "2.1"
+services:
+    laravel_82:
+        build:
+            context: .
+            dockerfile: images/Dockerfile82
+        image: aiemos-82
+        volumes:
+          - $PATH_TO_ELASTIC_REPO/prod/native/_build/linux-x86-64-release/extension/code/elastic_otel_php_82.so:/opt/elastic/elastic-otel-php/elastic_otel_php_82.so
+          - $PATH_TO_ELASTIC_REPO/prod/native/_build/linux-x86-64-release/loader/code/elastic_otel_php_loader.so:/opt/elastic/elastic-otel-php/elastic_otel_php_loader.so
+          - $PATH_TO_ELASTIC_REPO/prod/php:/opt/elastic/elastic-otel-php/php
+          - ./cfg/99-elastic.ini:/usr/local/etc/php/conf.d/99-elastic.ini
+        ports:
+           - "8082:80"
+        environment:
+            - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-mysql-secret-pw}
+            - MYSQL_DATABASE=${MYSQL_DATABASE:-laravel82}
+            - OTEL_EXPORTER_OTLP_HEADERS="Authorization=<key>"
+            - OTEL_EXPORTER_OTLP_ENDPOINT="<your endpoint>"
+            - ELASTIC_OTEL_LOG_LEVEL_STDERR=debug
+        container_name: aiemos-laravel-82
+        links:
+            - aiemos-mysql:mysql
+        depends_on:
+            - aiemos-mysql
+    aiemos-mysql:
+        image: mysql:5.7
+        volumes:
+          - ./initdb:/docker-entrypoint-initdb.d
+        ports:
+           - "3306:3306"
+        environment:
+            - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-mysql-secret-pw}
+        container_name: aiemos-mysql
+        command: mysqld --sql-mode=""

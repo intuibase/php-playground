@@ -1,0 +1,3 @@
+GRANT ALL ON *.* TO 'root'@'%';
+CREATE DATABASE IF NOT EXISTS `laravel82`;
+
