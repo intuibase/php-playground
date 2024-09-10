@@ -9,9 +9,6 @@ if [ ! -f .installed ]; then
         sleep 1
     done
 
-
-    # composer install --no-interaction
-
     composer create-project aimeos/aimeos myshop
 
     cd myshop
@@ -23,7 +20,7 @@ if [ ! -f .installed ]; then
     sed -i "s|DB_PASSWORD=.*|DB_PASSWORD=$MYSQL_ROOT_PASSWORD|" .env
 
     php artisan key:generate
-    php artisan vendor:publish --all
+    php artisan aimeos:setup --option=setup/default/demo:1
 
     cd -
 
@@ -32,5 +29,4 @@ if [ ! -f .installed ]; then
     touch .installed
 fi
 
-apachectl -D FOREGROUND
-exec "$@"
+apache2-foreground

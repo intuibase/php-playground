@@ -16,8 +16,4 @@ RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/myshop/publi
 
 RUN docker-php-ext-install opcache
 
-COPY /scripts/install.sh /opt/install.sh
-
-ENTRYPOINT ["sh", "/opt/install.sh"]
-
 WORKDIR /var/www/html
