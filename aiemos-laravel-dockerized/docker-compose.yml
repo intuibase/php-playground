@@ -5,26 +5,32 @@ services:
             context: .
             dockerfile: images/Dockerfile82
         image: aimeos-82
-        volumes:
-          - $PATH_TO_ELASTIC_REPO/prod/native/_build/linux-x86-64-release/extension/code/elastic_otel_php_82.so:/opt/elastic/elastic-otel-php/elastic_otel_php_82.so
-          - $PATH_TO_ELASTIC_REPO/prod/native/_build/linux-x86-64-release/loader/code/elastic_otel_php_loader.so:/opt/elastic/elastic-otel-php/elastic_otel_php_loader.so
-          - $PATH_TO_ELASTIC_REPO/prod/php:/opt/elastic/elastic-otel-php/php
-          - ./cfg/99-elastic.ini:/usr/local/etc/php/conf.d/99-elastic.ini
-          - ./scripts/install.sh:/opt/install.sh
+        container_name: aimeos-laravel-82
         ports:
            - "8082:80"
+        volumes:
+            # to use packaged agent, put in shared folder and uncomment installation in install.sh
+            - $PATH_TO_ELASTIC_REPO/prod/native/_build/linux-x86-64-release/extension/code/elastic_otel_php_82.so:/opt/elastic/elastic-otel-php/elastic_otel_php_82.so
+            - $PATH_TO_ELASTIC_REPO/prod/native/_build/linux-x86-64-release/extension/code/elastic_otel_php_82.debug:/opt/elastic/elastic-otel-php/elastic_otel_php_82.debug
+            - $PATH_TO_ELASTIC_REPO/prod/native/_build/linux-x86-64-release/loader/code/elastic_otel_php_loader.so:/opt/elastic/elastic-otel-php/elastic_otel_php_loader.so
+            - $PATH_TO_ELASTIC_REPO/prod/php:/opt/elastic/elastic-otel-php/php
+            - ./cfg/99-elastic.ini:/usr/local/etc/php/conf.d/99-elastic.ini
+            - ./scripts/install.sh:/opt/install.sh
+            - ./shared:/shared
         environment:
             - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-secret-pw}
             - MYSQL_DATABASE=${MYSQL_DATABASE:-laravel82}
-            - OTEL_EXPORTER_OTLP_HEADERS="Authorization=<key>"
-            - OTEL_EXPORTER_OTLP_ENDPOINT="<your endpoint>"
+            - OTEL_EXPORTER_OTLP_HEADERS=${OTEL_EXPORTER_OTLP_HEADERS:-Authorization=<key>}
+            - OTEL_EXPORTER_OTLP_ENDPOINT=${OTEL_EXPORTER_OTLP_ENDPOINT:-https://your endpoint}
+            - OTEL_RESOURCE_ATTRIBUTES=service.name=aimeos-shop-apache,service.version=1.2,deployment.environment=test
+            - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
             - ELASTIC_OTEL_LOG_LEVEL_STDERR=debug
-        container_name: aimeos-laravel-82
         links:
             - aimeos-mysql:mysql
         depends_on:
             - aimeos-mysql
         entrypoint: sh /opt/install.sh
+        privileged: true
     aimeos-mysql:
         image: mysql:5.7
         volumes:

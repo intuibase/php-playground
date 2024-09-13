@@ -1,8 +1,11 @@
 #!/bin/bash
 
+
 if [ ! -f .installed ]; then
     pwd
     echo "Aiemos not installed. Installing"
+
+#    dpkg -i /shared/elastic-otel-php_0.1.0_amd64.deb
 
     while ! mysqladmin ping -h mysql --silent; do
         echo "Waiting 1s for mysql startup..."
