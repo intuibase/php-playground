@@ -1,0 +1,24 @@
+FROM php:8.2-fpm-alpine
+
+RUN apk update \
+  && apk add wget git zip unzip mariadb-client icu-data-full \
+  && apk add libpq-dev libpng-dev libzip-dev g++ icu icu-dev libidn-dev
+
+
+RUN docker-php-ext-install pdo_pgsql pdo_mysql gd zip intl 
+
+
+
+RUN curl -sS https://getcomposer.org/installer | php \
+  && mv composer.phar /usr/local/bin/composer \
+  && ln -s /usr/local/bin/composer /usr/bin/composer
+
+#RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/myshop/public|' /etc/apache2/sites-enabled/000-default.conf \
+#  && sed -i 's|AllowOverride None|AllowOverride All|g'  /etc/apache2/apache2.conf \
+#  && a2enmod rewrite
+
+RUN docker-php-ext-install opcache pdo pdo_mysql
+
+WORKDIR /var/www/html
+
+CMD ["php-fpm"]
