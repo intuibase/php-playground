@@ -1,0 +1,49 @@
+# ===================== INSTALLATION CONFIGURATION
+
+# Installing OpenTelemetry PHP
+#export INSTALL_OPENTELEMETRY=1
+
+# Installing OpenTelemetry Apache - agent is not working properly
+#export INSTALL_OPENTELEMETRY_APACHE=/agent/installers/opentelemetry-webserver-sdk-x64-linux.tgz
+
+# Installing EDOT PHP
+#export AGENT_TO_INSTALL=/agent/installers/elastic-otel-php_0.3.4_amd64.deb
+
+# ======= Elastic APM agent PHP
+#export AGENT_TO_INSTALL=/agent/installers/apm-agent-php_1.15.0_amd64.deb
+
+
+# ================== Serverless project 
+
+#export OTEL_EXPORTER_OTLP_HEADERS="Authorization=ApiKey ********************=="
+#export OTEL_EXPORTER_OTLP_ENDPOINT="https://*******************"
+
+
+# ================== APM endpoint
+#export OTEL_EXPORTER_OTLP_ENDPOINT="https://**************/"
+#export OTEL_EXPORTER_OTLP_HEADERS="Authorization=Bearer ************"
+
+
+# ================== Local EDOT collector
+
+#export OTEL_EXPORTER_OTLP_ENDPOINT="http://***********:4318/"
+
+
+export OTEL_RESOURCE_ATTRIBUTES=service.name=LaravelAimeosApache,service.version=8.2,deployment.environment=dev
+
+
+#logging
+#export ELASTIC_OTEL_LOG_FEATURES="TRANSPORT=debug,REQUEST=debug,HOOKS=debug"
+#export OTEL_LOG_LEVEL=DEBUG
+#export ELASTIC_OTEL_LOG_LEVEL_STDERR=trace
+
+
+#export ELASTIC_OTEL_TRANSACTION_SPAN_ENABLED=false
+#export ELASTIC_OTEL_TRANSACTION_SPAN_ENABLED_CLI=false
+
+
+#export ELASTIC_OTEL_INFERRED_SPANS_ENABLED=true
+#export ELASTIC_OTEL_INFERRED_SPANS_SAMPLING_INTERVAL=5ms
+
+#export ELASTIC_OTEL_TRANSACTION_URL_GROUPS=/shop/*
+#export ELASTIC_OTEL_INFERRED_SPANS_REDUCTION_ENABLED=true

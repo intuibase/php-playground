@@ -1,0 +1,32 @@
+version: "2.1"
+services:
+    laravel_82:
+        build:
+            context: .
+            dockerfile: images/Dockerfile82
+        image: aimeos-82
+        container_name: laravel-aimeos-82
+        ports:
+           - "8082:80"
+        volumes:
+            - ./agent:/agent
+            - ./scripts:/scripts
+        environment:
+            - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-secret-pw}
+            - MYSQL_DATABASE=${MYSQL_DATABASE:-laravel82}
+        links:
+            - aimeos-mysql:mysql
+        depends_on:
+            - aimeos-mysql
+        entrypoint: bash /scripts/install.sh
+        privileged: true
+    aimeos-mysql:
+        image: mysql:5.7
+        volumes:
+          - ./initdb:/docker-entrypoint-initdb.d
+        ports:
+           - "3306:3306"
+        environment:
+            - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-secret-pw}
+        container_name: aimeos-mysql
+        command: mysqld --sql-mode=""

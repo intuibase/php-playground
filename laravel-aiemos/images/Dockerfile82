@@ -1,0 +1,19 @@
+FROM php:8.2-apache
+
+RUN apt-get update \
+  && apt-get install --yes --no-install-recommends libpq-dev libpng-dev libzip-dev zlib1g-dev libicu-dev g++ \
+  && docker-php-ext-install pdo_pgsql pdo_mysql gd zip intl
+
+RUN apt-get --yes install wget git zip unzip mariadb-client
+
+RUN curl -sS https://getcomposer.org/installer | php \
+  && mv composer.phar /usr/local/bin/composer \
+  && ln -s /usr/local/bin/composer /usr/bin/composer
+
+RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/myshop/public|' /etc/apache2/sites-enabled/000-default.conf \
+  && sed -i 's|AllowOverride None|AllowOverride All|g'  /etc/apache2/apache2.conf \
+  && a2enmod rewrite
+
+RUN docker-php-ext-install opcache
+
+WORKDIR /var/www/html
