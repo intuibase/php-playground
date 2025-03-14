@@ -1,0 +1,5 @@
+elastic_apm.service_name="DrupalUmami"
+elastic_apm.environment="PHP"
+elastic_apm.server_url="https://*********"
+elastic_apm.api_key="*******************=="
+elastic_apm.log_level_stderr=debug

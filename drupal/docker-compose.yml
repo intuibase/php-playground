@@ -1,0 +1,30 @@
+services:
+  drupal:
+    image: drupal:latest
+    ports:
+      - "8080:80"
+    volumes:
+      - ./drupal-data:/var/www/html
+      - ./agent:/agent
+      - ./scripts:/scripts
+    depends_on:
+      - db
+    environment:
+      - DRUPAL_DB_HOST=db
+      - DRUPAL_DB_USER=drupal
+      - DRUPAL_DB_PASSWORD=drupal
+      - DRUPAL_DB_NAME=drupal
+      - PHP_MEMORY_LIMIT=1G
+    privileged: true
+    entrypoint: ["/bin/bash", "/scripts/install-drupal.sh"]
+
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: drupal
+      MYSQL_USER: drupal
+      MYSQL_PASSWORD: drupal
+    volumes:
+      - ./db-data:/var/lib/mysql
