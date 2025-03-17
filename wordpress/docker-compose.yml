@@ -1,0 +1,59 @@
+services:
+    web:
+        image: nginx:1.13.12
+        volumes:
+            - ./nginx/site.conf:/etc/nginx/conf.d/default.conf:ro
+        volumes_from:
+            - wpfpm
+        ports:
+            - ${WP_PORT:-8080}:80
+    wpfpm:
+        image: wordpress:6.7-php8.3-fpm
+        environment:
+            - WORDPRESS_DB_HOST=mysql
+            - WORDPRESS_DB_USER=exampleuser
+            - WORDPRESS_DB_PASSWORD=examplepass
+            - WORDPRESS_DB_NAME=exampledb
+        volumes:
+            - ./agent:/agent
+            - ./scripts:/scripts
+            - wordpress-data:/var/www/html
+        depends_on:
+            - mysql
+        command: ["bash", "/scripts/install.sh"]
+        privileged: true
+
+    mysql:
+        image: mysql:8.0
+        restart: always
+        environment:
+            - MYSQL_DATABASE=exampledb
+            - MYSQL_USER=exampleuser
+            - MYSQL_PASSWORD=examplepass
+            - MYSQL_RANDOM_ROOT_PASSWORD='1'
+
+    wpcli:
+        image: wordpress:cli-2.11.0-php8.3
+        depends_on:
+            - wpfpm
+        volumes:
+            - ./wordpress/:/opt/wordpress:ro
+            - ./agent:/agent
+            - /tmp:/tmp
+        volumes_from:
+            - wpfpm
+        environment:
+            - WP_URL=${WP_URL:?"WP_URL env variable is required (http://hostmachineip)"}:${WP_PORT:-8080}
+            - WP_TITLE=${WP_TITLE:-ElasticWordpressShop}
+            - WP_USERNAME=${WP_USERNAME:-elastic}
+            - WP_PASSWORD=${WP_PASSWORD:-elastic}
+            - WP_EMAIL=${WP_EMAIL:-elastic@elastic.elastic}
+            - WORDPRESS_DB_HOST=mysql
+            - WORDPRESS_DB_USER=exampleuser
+            - WORDPRESS_DB_PASSWORD=examplepass
+            - WORDPRESS_DB_NAME=exampledb
+        user: root
+        command: ["sh", "/opt/wordpress/setup.sh"]
+
+volumes:
+    wordpress-data:
