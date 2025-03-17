@@ -1,12 +1,15 @@
 services:
     web:
-        image: nginx:1.13.12
+        image: nginx:1.26.0
         volumes:
             - ./nginx/site.conf:/etc/nginx/conf.d/default.conf:ro
+            - ./agent:/agent
+            - ./scripts:/scripts
         volumes_from:
             - wpfpm
         ports:
             - ${WP_PORT:-8080}:80
+        command: ["bash", "/scripts/install_nginx.sh"]
     wpfpm:
         image: wordpress:6.7-php8.3-fpm
         environment:

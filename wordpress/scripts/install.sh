@@ -15,17 +15,6 @@ if [ "${INSTALL_OPENTELEMETRY}" = "1" ]; then
   export OTEL_PHP_AUTOLOAD_ENABLED=true
 fi
 
-if [ ! -f .agent_apache_installed ]; then
-  if [[ -n "${INSTALL_OPENTELEMETRY_APACHE}" ]]; then
-    tar -xvf "${INSTALL_OPENTELEMETRY_APACHE}" -C /opt
-    cd /opt/opentelemetry-webserver-sdk
-    ./install.sh
-    cd -
-    cp /agent/configs/opentelemetry_module.conf /etc/apache2/conf-enabled/
-    touch .agent_apache_installed
-  fi
-fi
-
 if [ ! -f .agent_installed ]; then
   if [[ -n "${AGENT_TO_INSTALL}" ]]; then
       echo "Installing agent from: ${AGENT_TO_INSTALL}"

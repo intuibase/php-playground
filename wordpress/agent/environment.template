@@ -3,8 +3,10 @@
 # Installing OpenTelemetry PHP
 #export INSTALL_OPENTELEMETRY=1
 
-# Installing OpenTelemetry Apache - agent is not working properly
-#export INSTALL_OPENTELEMETRY_APACHE=/agent/installers/opentelemetry-webserver-sdk-x64-linux.tgz
+# Installing OpenTelemetry NGINX
+#export INSTALL_OPENTELEMETRY_NGINX=/agent/installers/opentelemetry-webserver-sdk-x64-linux.tgz
+# version must match with shared object folder and docker image version
+#export INSTALL_OPENTELEMETRY_NGINX_VERSION=1.26.0
 
 # Installing EDOT PHP
 #export AGENT_TO_INSTALL=/agent/installers/elastic-otel-php_0.3.6_amd64.deb
@@ -14,6 +16,11 @@
 #export AGENT_TO_INSTALL=/agent/installers/apm-agent-php_1.15.0_amd64.deb
 
 
+
+# NGINX instrumentation configuration - it uses GRPC/OTLP endpoint
+
+#export NGINX_OTEL_EXPORTER_OTLP_ENDPOINT=localhost:4317
+#export NGINX_OTEL_EXPORTER_OTLP_ENDPOINT_HEADERS="\"\""
 
 # ================== Serverless project 
 

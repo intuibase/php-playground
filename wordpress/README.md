@@ -69,11 +69,16 @@ export INSTALL_OPENTELEMETRY=1
 This will install the OpenTelemetry auto-instrumentation extension, including auto-instrumentation for PDO and CURL, and enable autoloading for the SDK.
 Installing EDOT PHP
 
-### Installing the OpenTelemetry Web Server Apache Module
+### Installing the OpenTelemetry Web Server NGINX Module
 
 ```bash
-export INSTALL_OPENTELEMETRY_APACHE=/agent/installers/opentelemetry-webserver-sdk-x64-linux.tgz
+export INSTALL_OPENTELEMETRY_NGINX=/agent/installers/opentelemetry-webserver-sdk-x64-linux.tgz
+export INSTALL_OPENTELEMETRY_NGINX_VERSION=1.26.0
+export NGINX_OTEL_EXPORTER_OTLP_ENDPOINT=localhost:4317
+export NGINX_OTEL_EXPORTER_OTLP_ENDPOINT_HEADERS="\"\""
 ```
 
-This will install the package and copy the configuration file from `agent/configs/opentelemetry_module.conf`. This configuration file will be applied to the Apache server inside the container.
+The NGINX web server version must match the version supported by the installer (both the corresponding version and folder name must align). You also need to specify the `GRPC/OTLP` endpoint for NGINX instrumentation, which differs from PHP instrumentation.
+
+This will install the package and copy the configuration file from `agent/configs/opentelemetry_module.conf`. This configuration file will be applied to the NGINX server inside the container.
 
