@@ -14,7 +14,7 @@ services:
                 max-file: "1"
 
     wpfpm:
-        image: wordpress:6.2.0-php8.1-fpm
+        image: wordpress:6.9-php8.4-fpm
         env_file:
             - .env
         environment:
@@ -50,7 +50,7 @@ services:
                max-file: "1"
 
     wpcli:
-        image: wordpress:cli-2.7.0-php8.1
+        image: wordpress:cli-php8.4
         depends_on:
             - wpfpm
         volumes:
