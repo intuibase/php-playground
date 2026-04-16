@@ -1,0 +1,5 @@
+agent/installers/*
+
+agent/configs/php.ini
+agent/environment
+
